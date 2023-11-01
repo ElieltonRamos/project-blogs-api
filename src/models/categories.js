@@ -1,6 +1,9 @@
 const categoriesSchema = (sequelize, DataTypes) => {
   const categoriesTable = sequelize.define('categories', {
-    id: DataTypes.INTEGER,
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
     name: DataTypes.STRING,
   });
 
