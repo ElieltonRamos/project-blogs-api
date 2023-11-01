@@ -35,6 +35,7 @@ services:
     ports:
       # Expõe a porta padrão da aplicação: altere aqui caso use outra porta
       - 3001:3001
+      - 9229:9229 # Porta para debug
     # Configura as variáveis de ambiente dentro do container
     environment:
       MYSQL_USER: root
