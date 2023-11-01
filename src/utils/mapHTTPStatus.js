@@ -4,6 +4,7 @@ const statusHTTP = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
   NOT_FOUND: 404,
+  CONFLICT: 409,
 };
 // status: 'BAD_REQUEST'
 const mapHTTPStatus = (status) => statusHTTP[status] || 500;
