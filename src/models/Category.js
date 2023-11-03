@@ -5,6 +5,10 @@ const categoriesSchema = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     name: DataTypes.STRING,
+  },
+  {
+    tableName: 'categories',
+    timestamps: false,
   });
 
   return categoriesTable;
