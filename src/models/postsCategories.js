@@ -8,12 +8,12 @@ const postCategoriesSchema = (sequelize, DataTypes) => {
     },
   });
 
-  postCategoriesTable.associate = ({ Category, blog_posts }) => {
+  postCategoriesTable.associate = ({ Category, BlogPost }) => {
     postCategoriesTable.belongsTo(Category, {
       foreignKey: 'category_id',
       as: 'category',
     });
-    postCategoriesTable.belongsTo(blog_posts, {
+    postCategoriesTable.belongsTo(BlogPost, {
       foreignKey: 'post_id',
       as: 'post',
     });
