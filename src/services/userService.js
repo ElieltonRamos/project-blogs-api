@@ -58,6 +58,7 @@ const createUser = async (user) => {
   const responseDB = await User.create({ displayName, email, password, image });
   const newUser = { name: displayName, id: responseDB.null };
   const token = generateToken(newUser);
+  console.log(responseDB.dataValues);
   return {
     status: 'CREATED',
     data: { token },
