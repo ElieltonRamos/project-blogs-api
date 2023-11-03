@@ -9,6 +9,12 @@ const createUser = async (req, res) => {
   res.status(mapHTTPStatus(status)).send(data);
 };
 
+const getAllUsers = async (_req, res) => {
+  const { status, data } = await services.findAllUsers();
+  res.status(mapHTTPStatus(status)).send(data);
+};
+
 module.exports = {
   createUser,
+  getAllUsers,
 };

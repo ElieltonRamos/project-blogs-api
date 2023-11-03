@@ -1,8 +1,8 @@
 const { User } = require('../models');
-const generateToken = require('./generateToken');
+const { generateToken } = require('../utils/tokenAuth');
 
 const login = async (email, password) => {
-  const user = await User.findOne({ 
+  const user = await User.findOne({
     where: { email },
     attributes: ['password', 'email', 'display_name', 'id'],
   });

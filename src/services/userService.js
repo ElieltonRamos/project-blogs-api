@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const generateToken = require('./generateToken');
+const { generateToken } = require('../utils/tokenAuth');
 
 const validateName = (name) => {
   if (name.length < 8) {
@@ -58,13 +58,23 @@ const createUser = async (user) => {
   const responseDB = await User.create({ displayName, email, password, image });
   const newUser = { name: displayName, id: responseDB.null };
   const token = generateToken(newUser);
-  console.log(responseDB.dataValues);
+
   return {
     status: 'CREATED',
     data: { token },
   };
 };
 
+const findAllUsers = async () => {
+  const users = await User.findAll({ attributes: { exclude: ['password'] } });
+
+  return {
+    status: 'OK',
+    data: users,
+  };
+};
+
 module.exports = {
   createUser,
+  findAllUsers,
 };
