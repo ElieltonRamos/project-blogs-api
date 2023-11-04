@@ -14,7 +14,6 @@ const checkToken = (req, res, next) => {
   }
 
   req.user = user;
-
   next();
 };
 
