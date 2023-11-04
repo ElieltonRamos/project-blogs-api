@@ -1,4 +1,4 @@
-const { BlogPost, PostCategory, Category } = require('../models');
+const { BlogPost, PostCategory, Category, User } = require('../models');
 const db = require('../models');
 
 const verifyFieldsPost = (title, content, categoryIds) => {
@@ -45,6 +45,21 @@ const registerPost = async (postInfo, categoryIds) => {
   }
 };
 
+const findPostsByUser = async (userId) => {
+  const Posts = await BlogPost.findAll({
+    include: [{
+      model: User,
+      as: 'user',
+      where: { id: userId },
+      attributes: { exclude: ['password'] },
+    }],
+  });
+  const categories = await Category.findAll({ where: { id: Posts[0].id } });
+  const result = [{ ...Posts[0].dataValues, categories }];
+  return { status: 'OK', data: result };
+};
+
 module.exports = {
   registerPost,
+  findPostsByUser,
 };

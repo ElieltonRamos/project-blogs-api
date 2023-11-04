@@ -9,6 +9,13 @@ const createPost = async (req, res) => {
   res.status(mapHTTPStatus(status)).send(data);
 };
 
+const getAllPosts = async (req, res) => {
+  const { user } = req;
+  const { status, data } = await services.findPostsByUser(user.id);
+  res.status(mapHTTPStatus(status)).send(data);
+};
+
 module.exports = {
   createPost,
+  getAllPosts,
 };
