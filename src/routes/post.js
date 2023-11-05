@@ -8,4 +8,6 @@ routerPost.post('/', middlewares.checkToken, controllers.createPost);
 
 routerPost.get('/', middlewares.checkToken, controllers.getAllPosts);
 
+routerPost.get('/:id', middlewares.checkToken, controllers.getPostById);
+
 module.exports = routerPost;

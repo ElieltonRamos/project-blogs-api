@@ -46,20 +46,28 @@ const registerPost = async (postInfo, categoryIds) => {
 };
 
 const findPostsByUser = async (userId) => {
-  const Posts = await BlogPost.findAll({
-    include: [{
-      model: User,
-      as: 'user',
-      where: { id: userId },
-      attributes: { exclude: ['password'] },
-    }],
+  const posts = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] }, where: { id: userId } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
   });
-  const categories = await Category.findAll({ where: { id: Posts[0].id } });
-  const result = [{ ...Posts[0].dataValues, categories }];
-  return { status: 'OK', data: result };
+  return { status: 'OK', data: posts };
+};
+
+const findPostById = async (id) => {
+  const post = await BlogPost.findByPk(id, {
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  if (!post) return { status: 'NOT_FOUND', data: { message: 'Post does not exist' } };
+  return { status: 'OK', data: post.dataValues };
 };
 
 module.exports = {
   registerPost,
   findPostsByUser,
+  findPostById,
 };
