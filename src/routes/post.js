@@ -12,4 +12,6 @@ routerPost.get('/:id', middlewares.checkToken, controllers.getPostById);
 
 routerPost.put('/:id', middlewares.checkToken, controllers.updatePost);
 
+routerPost.delete('/:id', middlewares.checkToken, controllers.deletePost);
+
 module.exports = routerPost;

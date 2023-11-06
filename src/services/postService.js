@@ -66,11 +66,7 @@ const findPostById = async (id) => {
   return { status: 'OK', data: post.dataValues };
 };
 
-const validEditPost = async (postInfo) => {
-  const { id, title, content, userId } = postInfo;
-  if (!(title && content)) {
-    return { status: 'BAD_REQUEST', data: { message: 'Some required fields are missing' } };
-  }
+const validEditPost = async (id, userId) => {
   const post = await BlogPost.findByPk(id, {
     include: [
       { model: User, as: 'user', attributes: { exclude: ['password'] } },
@@ -87,13 +83,15 @@ const validEditPost = async (postInfo) => {
 };
 
 const editPost = async (postInfo) => {
-  const validPost = await validEditPost(postInfo);
+  const { id, title, content, userId } = postInfo;
+  const validPost = await validEditPost(id, userId);
+  if (!(title && content)) {
+    return { status: 'BAD_REQUEST', data: { message: 'Some required fields are missing' } };
+  }
   if (validPost.status) return validPost;
   
-  const { id, title, content } = postInfo;
-
   const updated = new Date();
-  
+
   await BlogPost.update(
     { title, content, updated },
     { where: { id } },
@@ -104,9 +102,18 @@ const editPost = async (postInfo) => {
   return { status: 'OK', data: postEdited };
 };
 
+const destroyPost = async (postId, userId) => {
+  const validPost = await validEditPost(postId, userId);
+  if (validPost.status) return validPost;
+  
+  await BlogPost.destroy({ where: { id: postId } });
+  return { status: 'NO_CONTENT', data: '' };
+};
+
 module.exports = {
   registerPost,
   findPostsByUser,
   findPostById,
   editPost,
+  destroyPost,
 };
