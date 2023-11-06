@@ -24,7 +24,7 @@ const registerPost = async (postInfo, categoryIds) => {
   const fieldsValids = verifyFieldsPost(postInfo.title, postInfo.content, categoryIds);
   const categoryValids = await verifyCategory(categoryIds);
   if (fieldsValids || categoryValids) return fieldsValids || categoryValids;
-  
+
   const post = { ...postInfo, published: new Date(), updated: new Date() };
   const transaction = await db.sequelize.transaction();
   try {
@@ -66,8 +66,47 @@ const findPostById = async (id) => {
   return { status: 'OK', data: post.dataValues };
 };
 
+const validEditPost = async (postInfo) => {
+  const { id, title, content, userId } = postInfo;
+  if (!(title && content)) {
+    return { status: 'BAD_REQUEST', data: { message: 'Some required fields are missing' } };
+  }
+  const post = await BlogPost.findByPk(id, {
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  
+  });
+  if (!post) return { status: 'NOT_FOUND', data: { message: 'Post does not exist' } };
+
+  if (post.dataValues.userId !== userId) {
+    return { status: 'UNAUTHORIZED', data: { message: 'Unauthorized user' } };
+  }
+  return post.dataValues;
+};
+
+const editPost = async (postInfo) => {
+  const validPost = await validEditPost(postInfo);
+  if (validPost.status) return validPost;
+  
+  const { id, title, content } = postInfo;
+
+  const updated = new Date();
+  
+  await BlogPost.update(
+    { title, content, updated },
+    { where: { id } },
+  );
+
+  const postEdited = { ...validPost, title, content, updated };
+
+  return { status: 'OK', data: postEdited };
+};
+
 module.exports = {
   registerPost,
   findPostsByUser,
   findPostById,
+  editPost,
 };
