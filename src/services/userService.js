@@ -82,8 +82,17 @@ const findUserId = async (id) => {
   return { status: 'OK', data: user.dataValues };
 };
 
+const destroyUser = async (id) => {
+  const user = await User.findByPk(id);
+  if (!user) return { status: 'NOT_FOUND', data: { message: 'User does not exist' } };
+
+  await User.destroy({ where: { id } });
+  return { status: 'NO_CONTENT', data: '' };
+};
+
 module.exports = {
   createUser,
   findAllUsers,
   findUserId,
+  destroyUser,
 };
