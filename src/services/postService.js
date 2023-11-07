@@ -110,10 +110,27 @@ const destroyPost = async (postId, userId) => {
   return { status: 'NO_CONTENT', data: '' };
 };
 
+const searchPost = async (q, userId) => {
+  const posts = await BlogPost.findAll({
+    where: { [db.Sequelize.Op.or]: [
+      { title: { [db.Sequelize.Op.like]: `%${q}%` } },
+      { content: { [db.Sequelize.Op.like]: `%${q}%` } },
+    ] },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] }, where: { id: userId } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  if (!posts) return { status: 'OK', data: [] };
+
+  return { status: 'OK', data: posts };
+};
+
 module.exports = {
   registerPost,
   findPostsByUser,
   findPostById,
   editPost,
   destroyPost,
+  searchPost,
 };

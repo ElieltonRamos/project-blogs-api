@@ -2,7 +2,7 @@ const login = require('./loginController');
 const { createUser, getAllUsers, getUserId, deleteUser } = require('./userController');
 const { createCategory, getAllCategories } = require('./categoryController');
 const { createPost, getAllPosts, getPostById,
-  updatePost, deletePost } = require('./postController');
+  updatePost, deletePost, searchPost } = require('./postController');
 
 module.exports = {
   login,
@@ -17,4 +17,5 @@ module.exports = {
   getPostById,
   updatePost,
   deletePost,
+  searchPost,
 };

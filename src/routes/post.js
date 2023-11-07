@@ -4,6 +4,8 @@ const middlewares = require('../middlewares');
 
 const routerPost = express.Router();
 
+routerPost.get('/search', middlewares.checkToken, controllers.searchPost);
+
 routerPost.post('/', middlewares.checkToken, controllers.createPost);
 
 routerPost.get('/', middlewares.checkToken, controllers.getAllPosts);
