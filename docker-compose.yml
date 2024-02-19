@@ -11,6 +11,10 @@ services:
     user: node
     # Nome do container para facilitar execução
     container_name: blogs_api
+    # Mesmo que `docker run -t`
+    tty: true
+    # Mesmo que `docker run -i`
+    stdin_open: true
     # Restarta a imagem caso algo a faça parar
     restart: always
     # Diretório padrão de execução
@@ -20,10 +24,6 @@ services:
       # Monta o diretório atual, com todos os dados do projeto, 
       # dentro do diretório /app
       - ./:/app
-    # Lista de serviços do qual este serviço depende
-    depends_on:
-      db:
-        condition: service_healthy
     # Lista de portas mapeadas de dentro para fora do container
     # na notação porta_de_fora:porta_de_dentro
     ports:
@@ -39,6 +39,9 @@ services:
       API_HOST: 'node'
       API_PORT: 3001
       NODE_ENV: 'development'
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - blogs_api_net
 
@@ -57,7 +60,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"] # Deve aguardar o banco ficar operacional
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 10s
       retries: 5
     networks:

@@ -4,5 +4,12 @@ RUN apt install lsof
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-COPY . .
-CMD [ "npm", "run", "dev" ] && [ "npm", "run", "seed" ]
+# COPY __tests__ __tests__
+# COPY .trybe .trybe
+COPY src src
+COPY .eslintignore .
+COPY .eslintrc.json .
+COPY .sequelizerc .
+COPY jest.config.js .
+ENTRYPOINT [ "npm", "run" ]
+CMD [ "dev" ]
